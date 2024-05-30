@@ -2,7 +2,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home/Home';
-import About from '../pages/dummy/About';
 import Layout from '../components/Layout/layout';
 import Detail from '../components/detail/detail';
 import Popular from '../pages/popular/Popular';
@@ -16,7 +15,6 @@ const AppRouter = () => {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
               <Route path="/popular" element={<Popular />} />
               <Route path="/movie/:id" element={<Detail />} />
               <Route path="/movie/genre/:genreId" element={<GenrePage />} />

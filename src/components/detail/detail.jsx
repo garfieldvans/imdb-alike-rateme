@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { BsBookmarkPlus } from "react-icons/bs";
+import { fetchMovieDetails } from "../../utils/api"; // Import fetchMovieDetails function
 import { useParams } from "react-router-dom";
 
 const Detail = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
-  const auth =
-    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NmU4NTBiZDk3OTcwZjY4NWVmYjNhZThmODE1ZDFlNCIsInN1YiI6IjY1NzJkMWU0MjgxMWExMDEzOGE1ZmZmYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tUKZoh2KP5008Ym-9E1EqOT0s_OMbKDmvo6TyXCtqPs";
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization: auth,
-            },
-          }
-        );
-        const data = await response.json();
+        const data = await fetchMovieDetails(id); // Use fetchMovieDetails function
         setMovie(data);
       } catch (error) {
         console.error(error);

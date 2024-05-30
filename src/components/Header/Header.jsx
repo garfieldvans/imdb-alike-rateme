@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import React, { useState, useEffect } from "react";
 import { BsBookmarkPlusFill } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";

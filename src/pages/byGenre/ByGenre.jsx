@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { BsBookmarkPlus } from "react-icons/bs";
+import { fetchMoviesByGenre, fetchGenreName } from "../../utils/api";
 
 const GenrePage = () => {
   const { genreId } = useParams();
@@ -12,51 +13,27 @@ const GenrePage = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const fetchMoviesByGenre = async () => {
-      const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const fetchData = async () => {
+      const today = new Date().toISOString().split('T')[0]; 
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&sort_by=release_date.desc&release_date.lte=${today}&page=${currentPage}`,
-          {
-            headers: {
-              accept: "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NmU4NTBiZDk3OTcwZjY4NWVmYjNhZThmODE1ZDFlNCIsInN1YiI6IjY1NzJkMWU0MjgxMWExMDEzOGE1ZmZmYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tUKZoh2KP5008Ym-9E1EqOT0s_OMbKDmvo6TyXCtqPs"
-            }
-          }
-        );
-        const data = await response.json();
-        // Filter out movies without a poster
-        const moviesWithPosters = data.results.filter(movie => movie.poster_path);
-        setMovies(moviesWithPosters);
-        setTotalPages(data.total_pages);
+        const moviesData = await fetchMoviesByGenre(genreId, currentPage, today);
+        const genreData = await fetchGenreName(genreId);
+        
+        if (moviesData) {
+          // Filter out movies without a poster
+          const moviesWithPosters = moviesData.filter(movie => movie.poster_path);
+          setMovies(moviesWithPosters);
+          setTotalPages(moviesData.total_pages);
+        }
+        if (genreData) {
+          setGenreName(genreData?.name || "Genre");
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    const fetchGenreName = async () => {
-      try {
-        const response = await fetch(
-          "https://api.themoviedb.org/3/genre/movie/list?language=en",
-          {
-            headers: {
-              accept: "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3NmU4NTBiZDk3OTcwZjY4NWVmYjNhZThmODE1ZDFlNCIsInN1YiI6IjY1NzJkMWU0MjgxMWExMDEzOGE1ZmZmYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.tUKZoh2KP5008Ym-9E1EqOT0s_OMbKDmvo6TyXCtqPs"
-            }
-          }
-        );
-        const data = await response.json();
-        const genre = data.genres.find((g) => g.id === parseInt(genreId));
-        setGenreName(genre?.name || "Genre");
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchMoviesByGenre();
-    fetchGenreName();
+    fetchData();
   }, [genreId, currentPage]);
 
   const handlePageChange = (page) => {
@@ -72,7 +49,9 @@ const GenrePage = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`mx-1 px-4 py-2 ${currentPage === i ? "bg-rose-500" : "bg-gray-700"} text-white rounded-lg`}
+          className={`mx-1 px-4 py-2 ${
+            currentPage === i ? "bg-rose-500" : "bg-gray-700"
+          } text-white rounded-lg`}
         >
           {i}
         </button>

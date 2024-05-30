@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useEffect, useState } from "react";
 import { FaArrowRight, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -61,11 +60,15 @@ const Home = () => {
                         {movie.title}
                       </h1>
                     </Link>
-                    <img
-                      className="rounded-lg shadow-[0px_0px_10px_1px_#2d3748] "
-                      src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                      alt={movie.title}
-                    />
+                    <div className="md:hidden flex">
+                      <Link to={`/movie/${movie.id}`}>
+                        <img
+                          className="rounded-lg shadow-[0px_0px_10px_1px_#2d3748] h-full hover:opacity-85"
+                          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                          alt={movie.title}
+                        />
+                      </Link>
+                    </div>
                     <div className="hidden md:flex">
                       <Link to={`/movie/${movie.id}`}>
                         <img

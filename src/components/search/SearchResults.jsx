@@ -1,4 +1,3 @@
-// src/pages/SearchResults.jsx
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { searchMovies } from "../../utils/api";
