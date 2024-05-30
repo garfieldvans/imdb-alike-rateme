@@ -6,9 +6,10 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BsBookmarkPlus } from "react-icons/bs";
-import {  fetchNowPlayingMovies } from "../../utils/api";
+import { fetchPopularMovies, fetchNowPlayingMovies } from "../../utils/api";
 
 const Home = () => {
+  const [lists, setLists] = useState([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
 
   const settings = {
@@ -21,6 +22,17 @@ const Home = () => {
     autoplaySpeed: 2000,
   };
 
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const data = await fetchPopularMovies();
+      if (data) {
+        const filteredData = data.results.filter(movie => movie.poster_path);
+        setLists(filteredData);
+      }
+    };
+
+    fetchMovies();
+  }, []);
 
   useEffect(() => {
     const fetchNowPlaying = async () => {
@@ -86,7 +98,56 @@ const Home = () => {
           </Slider>
         </div>
       </div>
-      
+      <div className="mt-10">
+        <div className="flex flex-row justify-between items-center pe-5">
+          <h1 className="text-lg md:text-2xl font-bold mt-2">
+            Popular Movie List
+          </h1>
+          <div className=" hover:underline">
+            <Link to="/popular" className="flex flex-row gap-2 items-center">
+              <span>See All</span>
+              <FaArrowRight />
+            </Link>
+          </div>
+        </div>
+        <div className="my-3">
+          <div className="h-px w-full bg-gray-600" />
+        </div>
+        <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10">
+          {lists.map((list, i) => (
+            <div key={i} className="w-48 mb-auto flex flex-col">
+              <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
+                <Link to={`/movie/${list.id}`}>
+                  <img
+                    className="rounded-t-lg w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
+                    src={`https://image.tmdb.org/t/p/w500/${list.poster_path}`}
+                    alt={list.title}
+                    style={{ height: "300px", objectFit: "cover" }}
+                  />
+                </Link>
+                <div className="absolute top-0 left-0">
+                  <button type="button" className="">
+                    <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
+                  </button>
+                </div>
+                <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
+                  <FaStar />
+                  <span className="text-gray-50">
+                    {list.vote_average.toFixed(1)}
+                  </span>
+                </div>
+                <div className="px-3 py-1 flex-grow">
+                  <Link to={`/movie/${list.id}`}>
+                    <h1 className="text-justify text-base font-semibold text-gray-50 truncate">
+                      {list.title}
+                    </h1>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
