@@ -147,7 +147,7 @@ export const getRequestToken = async () => {
 
 export const createSession = async (requestToken) => {
     try {
-        const response = await fetch(`${API_URL}/authentication/session/new?api_key=${API_KEY}`, {
+        const response = await fetch(`${API_URL}/authentication/session/new?api_key=${KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
