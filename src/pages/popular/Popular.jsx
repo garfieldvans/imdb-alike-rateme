@@ -47,26 +47,22 @@ const Popular = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    // Load watchlist from localStorage or IndexedDB on component mount
     const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
     setWatchlist(storedWatchlist);
   }, []);
 
   const handleAddToWatchlist = (movie) => {
-    // Add movie to watchlist
     const updatedWatchlist = [...watchlist, movie];
     setWatchlist(updatedWatchlist);
-    // Save watchlist to localStorage or IndexedDB
     localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
   };
 
   const isMovieInWatchlist = (movieId) => {
-    // Check if movie is in watchlist
     return watchlist.some((movie) => movie.id === movieId);
   };
 
   return (
-    <div className="px-10">
+    <div className="md:px-10 p-4">
       <div className="mt-4">
         <h1 className="text-lg md:text-4xl font-bold text-center mb-6">
           Popular Movie List
@@ -74,9 +70,9 @@ const Popular = () => {
         <div className="my-6">
           <div className="h-px w-full bg-gray-600" />
         </div>
-        <div className="grid md:grid-cols-5 grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-5 grid-cols-2 md:gap-10 gap-6">
           {lists.map((list, i) => (
-            <div key={i} className="w-48 mb-auto flex flex-col">
+            <div key={i} className="md:w-56 w-40 mb-auto flex flex-col m-auto">
               <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
                 <Link to={`/movie/${list.id}`}>
                   <img

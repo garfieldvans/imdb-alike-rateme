@@ -64,16 +64,16 @@ const Home = () => {
   return (
     <div className="bg-gray-950 text-white px-4">
       <div>
-        <div className="flex flex-row justify-between items-center pr-5 mt-6">
+        <div className="flex flex-row justify-between items-center pr-0 md:pr-5 mt-6">
           <span className="text-lg md:text-2xl font-bold ">
             Now Playing Movie
           </span>
           <div className=" hover:underline">
             <Link
               to="/on-cinema"
-              className="flex flex-row gap-2 items-center"
+              className="flex flex-row gap-2 items-center text-xs md:text-sm"
             >
-              <span>See All</span>
+              <span className="">See All</span>
               <FaArrowRight />
             </Link>
           </div>
@@ -106,7 +106,7 @@ const Home = () => {
                       type="button"
                       onClick={() => handleAddToWatchlist(movie)}
                       disabled={isMovieInWatchlist(movie.id)}
-                      className={` absolute top-0 left-0 text-white text-4xl rounded-tl-lg px-1 md:w-1/6 h-14 flex justify-center items-center ${
+                      className={` absolute top-0 left-0 text-4xl rounded-tl-lg px-1 md:w-1/6 h-14 flex justify-center items-center ${
                         isMovieInWatchlist(movie.id)
                           ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
                           : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
@@ -147,13 +147,14 @@ const Home = () => {
         </div>
       </div>
       <div className="mt-10">
-        <div className="flex flex-row justify-between items-center pe-5 mt-2">
-          <h1 className="text-lg md:text-2xl font-bold ">
-            Popular Movie List
-          </h1>
+        <div className="flex flex-row justify-between items-center pr-0 md:pr-5 mt-2">
+          <h1 className="text-lg md:text-2xl font-bold ">Popular Movie</h1>
           <div className=" hover:underline">
-            <Link to="/popular" className="flex flex-row gap-2 items-center">
-              <span>See All</span>
+            <Link
+              to="/popular"
+              className="flex flex-row gap-2 items-center text-xs md:text-sm"
+            >
+              <span className="">See All</span>
               <FaArrowRight />
             </Link>
           </div>
@@ -161,16 +162,16 @@ const Home = () => {
         <div className="my-3">
           <div className="h-px w-full bg-gray-600" />
         </div>
-        <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10">
+        <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-2 md:gap-10">
           {lists.map((movie, i) => (
-            <div key={i} className="w-48 mb-auto flex flex-col">
+            <div key={i} className="md:w-56 w-40 mb-auto flex flex-col m-auto">
               <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
                 <Link to={`/movie/${movie.id}`}>
                   <img
-                    className="rounded-t-lg w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
+                    className="rounded-t-lg md:w-56 w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-contain "
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt={movie.title}
-                    style={{ height: "300px", objectFit: "cover" }}
+                    style={{ height: "250px", objectFit: "cover" }}
                   />
                 </Link>
                 <div className="absolute top-0 left-0">

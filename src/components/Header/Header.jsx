@@ -63,7 +63,7 @@ const Header = () => {
                   type="button"
                   onClick={toggleDropdown}
                 >
-                  <span>Genre</span>
+                  <span className="hidden md:block">Genre</span>
                   <IoIosArrowDown
                     style={{ marginLeft: "4px", marginRight: "4px" }}
                   />

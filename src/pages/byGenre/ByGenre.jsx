@@ -87,15 +87,16 @@ const GenrePage = () => {
   return (
     <div className="p-4 sm:p-6 bg-gray-950 text-white">
       <h1 className="text-2xl font-bold mb-6">{genreName} Movies</h1>
-      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10">
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 md:gap-10">
         {movies.map((list, i) => (
-          <div key={i} className="w-48 mb-auto flex flex-col">
+          <div key={i} className="md:w-56 w-40 mb-auto flex flex-col m-auto">
             <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
               <Link to={`/movie/${list.id}`}>
                 <img
-                  className="rounded-t-lg w-full h-72 object-cover shadow-[0px_0px_10px_1px_#2d3748]"
+                  className="rounded-t-lg md:w-56 w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
                   src={`https://image.tmdb.org/t/p/w500/${list.poster_path}`}
                   alt={list.title}
+                  style={{ height: "250px", objectFit: "cover" }}
                 />
               </Link>
               <div className="absolute top-0 left-0">

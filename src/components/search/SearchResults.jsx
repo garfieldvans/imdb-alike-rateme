@@ -67,18 +67,18 @@ const SearchResults = () => {
 
   return (
     <div className="bg-gray-950 text-white px-4">
-      <h1 className="text-lg md:text-2xl font-bold mt-4">Search Results</h1>
-      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10 mt-4">
+      <h1 className="text-lg md:text-2xl font-bold my-4">Search Results</h1>
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 md:gap-10">
         {results.map((movie, index) =>
           movie.poster_path ? (
-            <div key={index} className="w-48 mb-auto flex flex-col">
+            <div key={index} className="md:w-56 w-40 mb-auto flex flex-col m-auto">
               <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
                 <Link to={`/movie/${movie.id}`}>
                   <img
-                    className="rounded-t-lg w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
+                    className="rounded-t-lg md:w-56 w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-contain"
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt={movie.title}
-                    style={{ height: "300px", objectFit: "cover" }}
+                    style={{ height: "250px", objectFit: "cover" }}
                   />
                 </Link>
                 <div className="absolute top-0 left-0">

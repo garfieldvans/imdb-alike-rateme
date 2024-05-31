@@ -33,16 +33,16 @@ const Watchlist = () => {
           <h1 className="text-lg font-bold">No wishlist yet. Go get some.....</h1>{" "}
         </div>
       ) : null}
-      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10 w-full">
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 md:gap-10">
         {watchlist.map((movie, i) => (
-          <div key={i} className="w-48 mb-auto flex flex-col">
+          <div key={i} className="md:w-56 w-40 mb-auto flex flex-col m-auto">
             <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
               <Link to={`/movie/${movie.id}`}>
                 <img
-                  className="rounded-t-lg w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
+                  className="rounded-t-lg md:w-56 w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
                   src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                   alt={movie.title}
-                  style={{ height: "300px", objectFit: "cover" }}
+                  style={{ height: "250px", objectFit: "cover" }}
                 />
               </Link>
 
