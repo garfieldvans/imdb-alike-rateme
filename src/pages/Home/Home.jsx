@@ -5,11 +5,18 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BsBookmarkPlus } from "react-icons/bs";
-import { fetchPopularMovies, fetchNowPlayingMovies } from "../../utils/api";
+import {
+  fetchPopularMovies,
+  fetchNowPlayingMovies,
+  addToWatchlist,
+  getRequestToken,
+  createSession,
+} from "../../utils/api";
 
 const Home = () => {
   const [lists, setLists] = useState([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+  const [session_Id, setSessionId] = useState(null);
 
   const settings = {
     dots: true,
@@ -25,7 +32,7 @@ const Home = () => {
     const fetchMovies = async () => {
       const data = await fetchPopularMovies();
       if (data) {
-        const filteredData = data.results.filter(movie => movie.poster_path);
+        const filteredData = data.results.filter((movie) => movie.poster_path);
         setLists(filteredData);
       }
     };
@@ -37,13 +44,48 @@ const Home = () => {
     const fetchNowPlaying = async () => {
       const data = await fetchNowPlayingMovies();
       if (data) {
-        const filteredData = data.results.filter(movie => movie.poster_path);
+        const filteredData = data.results.filter((movie) => movie.poster_path);
         setNowPlayingMovies(filteredData);
       }
     };
 
     fetchNowPlaying();
   }, []);
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      try {
+        const requestToken = await getRequestToken();
+        // console.log(requestToken)
+        const sessionId = await createSession(requestToken);
+        console.log(sessionId)
+        setSessionId(sessionId);
+      } catch (error) {
+        console.error('Error initializing session:', error);
+      }
+    };
+
+    initializeSession();
+  }, []);
+
+  const handleAddToWatchlist = async (movieId) => {
+    console.log(movieId)
+    if (!session_Id) {
+      alert('Session ID not available. Please try again later.');
+      return;
+    }
+
+    try {
+      const result = await addToWatchlist(movieId, session_Id);
+      if (result.success) {
+        alert('Movie added to watchlist!');
+      } else {
+        alert('Failed to add movie to watchlist.');
+      }
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+    }
+  };
 
   return (
     <div className="bg-gray-950 text-white px-4">
@@ -79,7 +121,10 @@ const Home = () => {
                       </Link>
                     </div>
 
-                    <button type="button">
+                    <button
+                      type="button"
+                      onClick={() => handleAddToWatchlist(movie.id)}
+                    >
                       <BsBookmarkPlus className="absolute top-0 left-0 rounded-tl-lg text-white font-bold text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 w-1/6 h-14" />
                     </button>
                   </div>
@@ -117,32 +162,35 @@ const Home = () => {
           <div className="h-px w-full bg-gray-600" />
         </div>
         <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-10">
-          {lists.map((list, i) => (
+          {lists.map((movie, i) => (
             <div key={i} className="w-48 mb-auto flex flex-col">
               <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
-                <Link to={`/movie/${list.id}`}>
+                <Link to={`/movie/${movie.id}`}>
                   <img
                     className="rounded-t-lg w-auto h-auto shadow-[0px_0px_10px_1px_#2d3748] object-cover"
-                    src={`https://image.tmdb.org/t/p/w500/${list.poster_path}`}
-                    alt={list.title}
+                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                    alt={movie.title}
                     style={{ height: "300px", objectFit: "cover" }}
                   />
                 </Link>
                 <div className="absolute top-0 left-0">
-                  <button type="button" className="">
+                  <button
+                    type="button"
+                    onClick={() => handleAddToWatchlist(movie.id)}
+                  >
                     <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
                   </button>
                 </div>
                 <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
                   <FaStar />
                   <span className="text-gray-50">
-                    {list.vote_average.toFixed(1)}
+                    {movie.vote_average.toFixed(1)}
                   </span>
                 </div>
                 <div className="px-3 py-1 flex-grow">
-                  <Link to={`/movie/${list.id}`}>
+                  <Link to={`/movie/${movie.id}`}>
                     <h1 className="text-justify text-base font-semibold text-gray-50 truncate">
-                      {list.title}
+                      {movie.title}
                     </h1>
                   </Link>
                 </div>

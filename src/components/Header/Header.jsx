@@ -52,7 +52,10 @@ const Header = () => {
             </span>
           </Link>
           <div className="col-span-7 flex flex-row">
-            <form className="w-full bg-white rounded-lg" onSubmit={handleSearchSubmit}>
+            <form
+              className="w-full bg-white rounded-lg"
+              onSubmit={handleSearchSubmit}
+            >
               <div className="flex w-full">
                 <button
                   id="dropdown-button"
@@ -113,10 +116,13 @@ const Header = () => {
           </div>
 
           <div className="col-span-4 flex flex-row items-center text-white text-xs md:text-base font-semibold justify-between px-4 relative">
-            <button className="hidden sm:flex flex-row gap-2 items-center py-2 px-3 justify-center hover:bg-rose-500 hover:rounded-lg">
+            <Link
+              to="/watchlist"
+              className="hidden sm:flex flex-row gap-2 items-center py-2 px-3 justify-center hover:bg-rose-500 hover:rounded-lg"
+            >
               <BsBookmarkPlusFill size={20} />
               <span>Wishlist</span>
-            </button>
+            </Link>
             <button
               className="flex flex-row justify-center items-center gap-2 hover:bg-rose-500 py-2 px-3 hover:rounded-lg"
               onClick={toggleMenu}

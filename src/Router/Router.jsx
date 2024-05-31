@@ -7,6 +7,7 @@ import Detail from '../components/detail/detail';
 import Popular from '../pages/popular/Popular';
 import GenrePage from '../pages/byGenre/ByGenre';
 import SearchResults from '../components/search/SearchResults';
+import Watchlist from '../pages/watchList/WatchList';
 
 const AppRouter = () => {
 
@@ -19,6 +20,7 @@ const AppRouter = () => {
               <Route path="/movie/:id" element={<Detail />} />
               <Route path="/movie/genre/:genreId" element={<GenrePage />} />
               <Route path="/search" element={<SearchResults />} />
+              <Route path="/watchlist" element={<Watchlist />} />
             </Route>
           </Routes>
         </Router>

@@ -1,3 +1,4 @@
+// src/pages/GenrePage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -14,14 +15,20 @@ const GenrePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const today = new Date().toISOString().split('T')[0]; 
+      const today = new Date().toISOString().split("T")[0];
       try {
-        const moviesData = await fetchMoviesByGenre(genreId, currentPage, today);
+        const moviesData = await fetchMoviesByGenre(
+          genreId,
+          currentPage,
+          today
+        );
         const genreData = await fetchGenreName(genreId);
-        
+
         if (moviesData) {
           // Filter out movies without a poster
-          const moviesWithPosters = moviesData.filter(movie => movie.poster_path);
+          const moviesWithPosters = moviesData.filter(
+            (movie) => movie.poster_path
+          );
           setMovies(moviesWithPosters);
           setTotalPages(moviesData.total_pages);
         }
@@ -68,7 +75,7 @@ const GenrePage = () => {
           <div key={i} className="w-48 mb-auto flex flex-col">
             <div className="flex flex-col h-full bg-gray-700 border border-rose-900 rounded-lg shadow hover:bg-rose-500 relative">
               <Link to={`/movie/${list.id}`}>
-              <img
+                <img
                   className="rounded-t-lg w-full h-72 object-cover shadow-[0px_0px_10px_1px_#2d3748]"
                   src={`https://image.tmdb.org/t/p/w500/${list.poster_path}`}
                   alt={list.title}
@@ -106,7 +113,9 @@ const GenrePage = () => {
         </button>
         {renderPaginationButtons()}
         <button
-          onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+          onClick={() =>
+            handlePageChange(Math.min(totalPages, currentPage + 1))
+          }
           disabled={currentPage === totalPages}
           className="mx-1 px-4 py-2 bg-gray-700 text-white rounded-lg disabled:opacity-50"
         >
