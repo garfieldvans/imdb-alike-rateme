@@ -131,24 +131,24 @@ const Header = () => {
               <span className="md:block hidden">Menu</span>
             </button>
             {menuVisible && (
-              <div className="absolute top-full right-0 mt-3 w-full bg-white rounded-lg shadow-lg z-20 bg-slate-200">
-                <ul className="py-2 text-gray-700">
+              <div className="absolute top-full right-0 mt-3 w-full bg-white rounded-lg shadow-lg z-20 bg-slate-200" style={{width: "200px"}}>
+                <ul className="py-1 text-gray-700">
                   <li>
                     <Link
-                      to="/about"
+                      to="/watchlist"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setMenuVisible(false)}
                     >
-                      Profile
+                      Wishlist
                     </Link>
                   </li>
                   <li>
                     <Link
-                      to="/settings"
+                      to="/genres"
                       className="block px-4 py-2 hover:bg-gray-100"
                       onClick={() => setMenuVisible(false)}
                     >
-                      Settings
+                      Genres
                     </Link>
                   </li>
                   <li>

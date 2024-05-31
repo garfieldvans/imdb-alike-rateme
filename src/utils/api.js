@@ -72,9 +72,26 @@ export const fetchMoviesByGenre = async (genreId, page, releaseDate) => {
         },
       }
     );
+    
     return await response.json();
   } catch (error) {
     console.error("Error fetching movies by genre:", error);
+  }
+};
+
+export const fetchMovieVideos = async (movieId) => {
+  try {
+    const response = await fetch(`${API_URL}/movie/${movieId}/videos`, {
+      headers: {
+        accept: "application/json",
+        Authorization: API_KEY,
+      },
+    });
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    console.error("Error fetching movie videos:", error);
+    throw error;
   }
 };
 
@@ -124,70 +141,5 @@ export const fetchGenreName = async (genreId) => {
   }
 };
 
-//untuk wacthlist
 
-export const getRequestToken = async () => {
-  try {
-    const response = await fetch(`${API_URL}/authentication/token/new`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: API_KEY,
-      },
-    });
 
-    const data = await response.json();
-    console.log(data);
-    return data.request_token;
-  } catch (error) {
-    console.error("Error fetching request token:", error);
-    throw error;
-  }
-};
-
-export const createSession = async (requestToken) => {
-    try {
-        const response = await fetch(`${API_URL}/authentication/session/new?api_key=${KEY}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ request_token: requestToken }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            console.log('Session ID:', data.session_id);
-            return data.session_id;
-        } else {
-            throw new Error(data.status_message);
-        }
-    } catch (error) {
-        console.error('Error creating session:', error);
-        throw error;
-    }
-};
-
-export const addToWatchlist = async (movieId, sessionId) => {
-  try {
-    const response = await fetch(
-      `${API_URL}/account/20805504/watchlist?api_key=${API_KEY}&session_id=${sessionId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          media_type: "movie",
-          media_id: movieId,
-          watchlist: true,
-        }),
-      }
-    );
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error adding to watchlist:", error);
-    throw error;
-  }
-};

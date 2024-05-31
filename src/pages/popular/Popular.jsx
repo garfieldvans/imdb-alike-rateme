@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BsBookmarkPlus } from "react-icons/bs";
+import { BsBookmarkPlus, BsBookmarkPlusFill, BsFillBookmarkCheckFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 import { fetchPopularMovies } from "../../utils/api";
 
 const Popular = () => {
   const [lists, setLists] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -45,6 +46,25 @@ const Popular = () => {
     fetchMovies(currentPage);
   }, [currentPage]);
 
+  useEffect(() => {
+    // Load watchlist from localStorage or IndexedDB on component mount
+    const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    setWatchlist(storedWatchlist);
+  }, []);
+
+  const handleAddToWatchlist = (movie) => {
+    // Add movie to watchlist
+    const updatedWatchlist = [...watchlist, movie];
+    setWatchlist(updatedWatchlist);
+    // Save watchlist to localStorage or IndexedDB
+    localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
+  };
+
+  const isMovieInWatchlist = (movieId) => {
+    // Check if movie is in watchlist
+    return watchlist.some((movie) => movie.id === movieId);
+  };
+
   return (
     <div className="px-10">
       <div className="mt-4">
@@ -66,13 +86,22 @@ const Popular = () => {
                   />
                 </Link>
                 <div className="absolute top-0 left-0">
-                  <button type="button" className="">
-                    <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
+                <button
+                    type="button"
+                    onClick={() => handleAddToWatchlist(list)}
+                    disabled={isMovieInWatchlist(list.id)}
+                    className={` text-2xl md:text-4xl rounded-tl-lg px-2 md:w-4/5 md:h-14 h-12 flex justify-center items-center ${
+                      isMovieInWatchlist(list.id)
+                      ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
+                      : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
+                    }`}
+                  >
+                    {isMovieInWatchlist(list.id)? <BsFillBookmarkCheckFill />:<BsBookmarkPlusFill />  }
                   </button>
                 </div>
-                <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
+                <div className="flex flex-row gap-2 text-yellow-500 text-xs items-center px-3 py-1 mt-2">
                   <FaStar />
-                  <span className="text-gray-50">
+                  <span className="text-gray-50  ">
                     {list.vote_average.toFixed(1)}
                   </span>
                 </div>

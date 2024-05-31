@@ -4,19 +4,13 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { BsBookmarkPlus } from "react-icons/bs";
-import {
-  fetchPopularMovies,
-  fetchNowPlayingMovies,
-  addToWatchlist,
-  getRequestToken,
-  createSession,
-} from "../../utils/api";
+import { BsBookmarkPlusFill, BsFillBookmarkStarFill } from "react-icons/bs";
+import { fetchPopularMovies, fetchNowPlayingMovies } from "../../utils/api";
 
 const Home = () => {
   const [lists, setLists] = useState([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
-  const [session_Id, setSessionId] = useState(null);
+  const [watchlist, setWatchlist] = useState([]);
 
   const settings = {
     dots: true,
@@ -53,39 +47,20 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const initializeSession = async () => {
-      try {
-        const requestToken = await getRequestToken();
-        // console.log(requestToken)
-        const sessionId = await createSession(requestToken);
-        console.log(sessionId)
-        setSessionId(sessionId);
-      } catch (error) {
-        console.error('Error initializing session:', error);
-      }
-    };
-
-    initializeSession();
+    const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    setWatchlist(storedWatchlist);
   }, []);
 
-  const handleAddToWatchlist = async (movieId) => {
-    console.log(movieId)
-    if (!session_Id) {
-      alert('Session ID not available. Please try again later.');
-      return;
-    }
-
-    try {
-      const result = await addToWatchlist(movieId, session_Id);
-      if (result.success) {
-        alert('Movie added to watchlist!');
-      } else {
-        alert('Failed to add movie to watchlist.');
-      }
-    } catch (error) {
-      console.error('Error adding to watchlist:', error);
-    }
+  const handleAddToWatchlist = (movie) => {
+    const updatedWatchlist = [...watchlist, movie];
+    setWatchlist(updatedWatchlist);
+    localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
   };
+
+  const isMovieInWatchlist = (movieId) => {
+    return watchlist.some((movie) => movie.id === movieId);
+  };
+  
 
   return (
     <div className="bg-gray-950 text-white px-4">
@@ -111,6 +86,23 @@ const Home = () => {
                         />
                       </Link>
                     </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleAddToWatchlist(movie)}
+                      disabled={isMovieInWatchlist(movie.id)}
+                      className={` absolute top-0 left-0 text-white text-4xl rounded-tl-lg px-1 md:w-1/6 h-14 flex justify-center items-center ${
+                        isMovieInWatchlist(movie.id)
+                          ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
+                          : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
+                      }`}
+                    >
+                      {isMovieInWatchlist(movie.id) ? (
+                        <BsFillBookmarkStarFill />
+                      ) : (
+                        <BsBookmarkPlusFill />
+                      )}
+                    </button>
                     <div className="hidden md:flex">
                       <Link to={`/movie/${movie.id}`}>
                         <img
@@ -120,17 +112,10 @@ const Home = () => {
                         />
                       </Link>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleAddToWatchlist(movie.id)}
-                    >
-                      <BsBookmarkPlus className="absolute top-0 left-0 rounded-tl-lg text-white font-bold text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 w-1/6 h-14" />
-                    </button>
                   </div>
-                  <div className="w-9/12 relative md:block hidden">
+                  <div className="w-9/12 relative md:block hidden rounded-lg">
                     <Link to={`/movie/${movie.id}`}>
-                      <h1 className="absolute bottom-0 w-full  flex justify-center min-h-24 items-center backdrop-blur-md text-white text-2xl bg-black bg-opacity-50 px-2 py-1 hover:underline ">
+                      <h1 className="absolute bottom-0 w-full  flex justify-center min-h-24 items-center backdrop-blur-md text-white text-2xl bg-gray-700 rounded-b-lg bg-opacity-50 px-2 py-1 hover:underline ">
                         {movie.title}
                       </h1>
                     </Link>
@@ -176,14 +161,24 @@ const Home = () => {
                 <div className="absolute top-0 left-0">
                   <button
                     type="button"
-                    onClick={() => handleAddToWatchlist(movie.id)}
+                    onClick={() => handleAddToWatchlist(movie)}
+                    disabled={isMovieInWatchlist(movie.id)}
+                    className={` text-3xl md:text-4xl rounded-tl-lg px-1 md:w-4/5  h-12 flex justify-center items-center ${
+                      isMovieInWatchlist(movie.id)
+                        ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
+                        : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
+                    }`}
                   >
-                    <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
+                    {isMovieInWatchlist(movie.id) ? (
+                      <BsFillBookmarkStarFill />
+                    ) : (
+                      <BsBookmarkPlusFill />
+                    )}
                   </button>
                 </div>
-                <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
+                <div className="flex flex-row gap-2 text-yellow-500 text-xs items-center px-3 py-1 mt-2">
                   <FaStar />
-                  <span className="text-gray-50">
+                  <span className="text-gray-50  ">
                     {movie.vote_average.toFixed(1)}
                   </span>
                 </div>
@@ -193,6 +188,9 @@ const Home = () => {
                       {movie.title}
                     </h1>
                   </Link>
+                </div>
+                <div className="px-3 py-1 flex-grow md:text-sm text-xs">
+                  <span>{movie.release_date.split("-")[0]}</span>
                 </div>
               </div>
             </div>

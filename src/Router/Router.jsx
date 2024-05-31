@@ -8,6 +8,7 @@ import Popular from '../pages/popular/Popular';
 import GenrePage from '../pages/byGenre/ByGenre';
 import SearchResults from '../components/search/SearchResults';
 import Watchlist from '../pages/watchList/WatchList';
+import Genres from '../pages/genres/Genres';
 
 const AppRouter = () => {
 
@@ -21,6 +22,7 @@ const AppRouter = () => {
               <Route path="/movie/genre/:genreId" element={<GenrePage />} />
               <Route path="/search" element={<SearchResults />} />
               <Route path="/watchlist" element={<Watchlist />} />
+              <Route path="/genres" element={<Genres />} />
             </Route>
           </Routes>
         </Router>

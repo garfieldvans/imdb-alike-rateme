@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { searchMovies } from "../../utils/api";
-import { BsBookmarkPlus } from "react-icons/bs";
+import { BsBookmarkPlusFill, BsFillBookmarkCheckFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 
 const SearchResults = () => {
@@ -10,6 +10,7 @@ const SearchResults = () => {
   const [results, setResults] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [watchlist, setWatchlist] = useState([]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -49,6 +50,21 @@ const SearchResults = () => {
     }
   }, [query, currentPage]);
 
+  useEffect(() => {
+    const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    setWatchlist(storedWatchlist);
+  }, []);
+
+  const handleAddToWatchlist = (movie) => {
+    const updatedWatchlist = [...watchlist, movie];
+    setWatchlist(updatedWatchlist);
+    localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
+  };
+
+  const isMovieInWatchlist = (movieId) => {
+    return watchlist.some((movie) => movie.id === movieId);
+  };
+
   return (
     <div className="bg-gray-950 text-white px-4">
       <h1 className="text-lg md:text-2xl font-bold mt-4">Search Results</h1>
@@ -66,13 +82,26 @@ const SearchResults = () => {
                   />
                 </Link>
                 <div className="absolute top-0 left-0">
-                  <button type="button" className="">
-                    <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
+                  <button
+                    type="button"
+                    onClick={() => handleAddToWatchlist(movie)}
+                    disabled={isMovieInWatchlist(movie.id)}
+                    className={` text-2xl md:text-4xl rounded-tl-lg px-2 md:w-4/5 md:h-14 h-12 flex justify-center items-center ${
+                      isMovieInWatchlist(movie.id)
+                        ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
+                        : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
+                    }`}
+                  >
+                    {isMovieInWatchlist(movie.id) ? (
+                      <BsFillBookmarkCheckFill />
+                    ) : (
+                      <BsBookmarkPlusFill />
+                    )}
                   </button>
                 </div>
-                <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
+                <div className="flex flex-row gap-2 text-yellow-500 text-xs items-center px-3 py-1 mt-2">
                   <FaStar />
-                  <span className="text-gray-50">
+                  <span className="text-gray-50  ">
                     {movie.vote_average.toFixed(1)}
                   </span>
                 </div>
@@ -82,6 +111,9 @@ const SearchResults = () => {
                       {movie.title}
                     </h1>
                   </Link>
+                </div>
+                <div className="px-3 py-1 flex-grow md:text-sm text-xs">
+                  <span>{movie.release_date.split("-")[0]}</span>
                 </div>
               </div>
             </div>
@@ -98,7 +130,9 @@ const SearchResults = () => {
         </button>
         {renderPagination()}
         <button
-          onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+          onClick={() =>
+            handlePageChange(Math.min(totalPages, currentPage + 1))
+          }
           disabled={currentPage === totalPages}
           className="mx-1 px-4 bg-gray-700 text-white rounded-lg disabled:opacity-50"
         >

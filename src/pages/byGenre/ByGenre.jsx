@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { BsBookmarkPlus } from "react-icons/bs";
 import { fetchMoviesByGenre, fetchGenreName } from "../../utils/api";
+import { BsBookmarkPlusFill, BsFillBookmarkStarFill } from "react-icons/bs";
 
 const GenrePage = () => {
   const { genreId } = useParams();
@@ -12,6 +12,9 @@ const GenrePage = () => {
   const [genreName, setGenreName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [watchlist, setWatchlist] = useState([]);
+  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,8 +28,7 @@ const GenrePage = () => {
         const genreData = await fetchGenreName(genreId);
 
         if (moviesData) {
-          // Filter out movies without a poster
-          const moviesWithPosters = moviesData.filter(
+          const moviesWithPosters = moviesData.results.filter(
             (movie) => movie.poster_path
           );
           setMovies(moviesWithPosters);
@@ -45,6 +47,21 @@ const GenrePage = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    const storedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    setWatchlist(storedWatchlist);
+  }, []);
+
+  const handleAddToWatchlist = (movie) => {
+    const updatedWatchlist = [...watchlist, movie];
+    setWatchlist(updatedWatchlist);
+    localStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
+  };
+
+  const isMovieInWatchlist = (movieId) => {
+    return watchlist.some((movie) => movie.id === movieId);
   };
 
   const renderPaginationButtons = () => {
@@ -82,16 +99,29 @@ const GenrePage = () => {
                 />
               </Link>
               <div className="absolute top-0 left-0">
-                <button type="button" className="">
-                  <BsBookmarkPlus className="text-white text-4xl bg-gray-700/50 hover:bg-gray-700/75 p-2 md:w-4/5 h-14" />
-                </button>
+              <button
+                    type="button"
+                    onClick={() => handleAddToWatchlist(list)}
+                    disabled={isMovieInWatchlist(list.id)}
+                    className={` text-3xl md:text-4xl rounded-tl-lg px-1 md:w-4/5  h-12 flex justify-center items-center ${
+                      isMovieInWatchlist(list.id)
+                      ? "bg-gray-50 border border-rose-700 z-2 text-rose-600"
+                      : "bg-gray-700/75 text-gray-100 hover:bg-gray-700/95"
+                    }`}
+                  >
+                    {isMovieInWatchlist(list.id) ? (
+                      <BsFillBookmarkStarFill />
+                    ) : (
+                      <BsBookmarkPlusFill />
+                    )}
+                  </button>
               </div>
-              <div className="flex flex-row gap-2 text-yellow-500 items-center px-3 py-1">
-                <FaStar />
-                <span className="text-gray-50">
-                  {list.vote_average.toFixed(1)}
-                </span>
-              </div>
+              <div className="flex flex-row gap-2 text-yellow-500 text-xs items-center px-3 py-1 mt-2">
+                  <FaStar />
+                  <span className="text-gray-50  ">
+                    {list.vote_average.toFixed(1)}
+                  </span>
+                </div>
               <div className="px-3 py-1 flex-grow">
                 <a href="#">
                   <h1 className="text-justify text-base font-semibold text-gray-50 truncate">
@@ -99,6 +129,9 @@ const GenrePage = () => {
                   </h1>
                 </a>
               </div>
+              <div className="px-3 py-1 flex-grow md:text-sm text-xs">
+                  <span>{list.release_date.split("-")[0]}</span>
+                </div>
             </div>
           </div>
         ))}
