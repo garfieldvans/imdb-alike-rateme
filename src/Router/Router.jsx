@@ -9,6 +9,7 @@ import GenrePage from '../pages/byGenre/ByGenre';
 import SearchResults from '../components/search/SearchResults';
 import Watchlist from '../pages/watchList/WatchList';
 import Genres from '../pages/genres/Genres';
+import NowPlaying from '../pages/nowPlaying/nowPlaying';
 
 const AppRouter = () => {
 
@@ -18,6 +19,7 @@ const AppRouter = () => {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/popular" element={<Popular />} />
+              <Route path="/on-cinema" element={<NowPlaying />} />
               <Route path="/movie/:id" element={<Detail />} />
               <Route path="/movie/genre/:genreId" element={<GenrePage />} />
               <Route path="/search" element={<SearchResults />} />

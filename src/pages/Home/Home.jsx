@@ -60,12 +60,27 @@ const Home = () => {
   const isMovieInWatchlist = (movieId) => {
     return watchlist.some((movie) => movie.id === movieId);
   };
-  
 
   return (
     <div className="bg-gray-950 text-white px-4">
       <div>
-        <h1 className="text-lg md:text-2xl font-bold">Now Playing</h1>
+        <div className="flex flex-row justify-between items-center pr-5 mt-6">
+          <span className="text-lg md:text-2xl font-bold ">
+            Now Playing Movie
+          </span>
+          <div className=" hover:underline">
+            <Link
+              to="/on-cinema"
+              className="flex flex-row gap-2 items-center"
+            >
+              <span>See All</span>
+              <FaArrowRight />
+            </Link>
+          </div>
+        </div>
+        <div className="my-3">
+          <div className="h-px w-full bg-gray-600" />
+        </div>
         <div className="md:px-16 px-2 mt-4">
           <Slider {...settings} className="">
             {nowPlayingMovies.map((movie, index) => (
@@ -132,8 +147,8 @@ const Home = () => {
         </div>
       </div>
       <div className="mt-10">
-        <div className="flex flex-row justify-between items-center pe-5">
-          <h1 className="text-lg md:text-2xl font-bold mt-2">
+        <div className="flex flex-row justify-between items-center pe-5 mt-2">
+          <h1 className="text-lg md:text-2xl font-bold ">
             Popular Movie List
           </h1>
           <div className=" hover:underline">
